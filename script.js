@@ -8,7 +8,7 @@ function initCarousel() {
     const dots = carousel.querySelectorAll('.dot');
     const prevBtn = carousel.querySelector('.prev-btn');
     const nextBtn = carousel.querySelector('.next-btn');
-    
+
     let currentSlide = 0;
     let slideInterval;
     const slideDuration = 5000; // 5 seconds per slide
@@ -19,7 +19,7 @@ function initCarousel() {
         // Hide all slides
         slides.forEach(slide => slide.classList.remove('active'));
         dots.forEach(dot => dot.classList.remove('active'));
-        
+
         // Show current slide and update dot
         slides[index].classList.add('active');
         dots[index].classList.add('active');
@@ -49,19 +49,19 @@ function initCarousel() {
         });
     });
 
-        function startSlideShow() {
+    function startSlideShow() {
         // Clear any existing interval to prevent multiple intervals running
         if (slideInterval) {
             clearInterval(slideInterval);
         }
-        
+
         // Start the interval
         slideInterval = setInterval(() => {
             if (!isPaused) {
                 nextSlide();
             }
         }, slideDuration);
-        
+
         // Auto-start the slideshow
         isPaused = false;
     }
@@ -82,7 +82,7 @@ function initCarousel() {
     // Event listeners for pausing/resuming
     carousel.addEventListener('mouseenter', pauseSlideShow);
     carousel.addEventListener('mouseleave', resumeSlideShow);
-    
+
     // Pause when window loses focus
     document.addEventListener('visibilitychange', () => {
         if (document.hidden) {
@@ -91,7 +91,7 @@ function initCarousel() {
             resumeSlideShow();
         }
     });
-    
+
     // Touch events for mobile
     carousel.addEventListener('touchstart', pauseSlideShow);
     carousel.addEventListener('touchend', () => {
@@ -129,7 +129,7 @@ function initCarousel() {
 }
 
 // Initialize everything when the DOM is loaded
-document.addEventListener('DOMContentLoaded', function() {
+document.addEventListener('DOMContentLoaded', function () {
     // Initialize the carousel
     initCarousel();
     // Hamburger menu toggle
@@ -138,7 +138,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const navContainer = document.querySelector('nav .container');
 
     if (hamburger && navLinks) {
-        hamburger.addEventListener('click', function(e) {
+        hamburger.addEventListener('click', function (e) {
             e.stopPropagation();
             navLinks.classList.toggle('active');
             hamburger.classList.toggle('active');
@@ -146,7 +146,7 @@ document.addEventListener('DOMContentLoaded', function() {
         });
 
         // Close menu when clicking outside
-        document.addEventListener('click', function(e) {
+        document.addEventListener('click', function (e) {
             if (!navContainer.contains(e.target)) {
                 navLinks.classList.remove('active');
                 hamburger.classList.remove('active');
@@ -167,12 +167,12 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Smooth scrolling for anchor links
     document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-        anchor.addEventListener('click', function(e) {
+        anchor.addEventListener('click', function (e) {
             e.preventDefault();
-            
+
             const targetId = this.getAttribute('href');
             const targetElement = document.querySelector(targetId);
-                
+
             if (targetElement) {
                 window.scrollTo({
                     top: targetElement.offsetTop - 80,
@@ -183,7 +183,7 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 
     // Navbar scroll effect
-    window.addEventListener('scroll', function() {
+    window.addEventListener('scroll', function () {
         const navbar = document.querySelector('nav');
         const scrollThreshold = window.innerWidth <= 768 ? 50 : 170;
         if (window.scrollY > scrollThreshold) {
@@ -203,7 +203,7 @@ const observer = new IntersectionObserver((entries) => {
                 const target = parseFloat(stat.getAttribute('data-target'));
                 let current = 0;
                 const increment = target / 100;
-                
+
                 const updateCount = () => {
                     current += increment;
                     if (current < target) {
@@ -213,17 +213,17 @@ const observer = new IntersectionObserver((entries) => {
                     } else {
                         // Final display - use toFixed(0) for whole numbers, toFixed(1) for decimal
                         stat.textContent = (target === 99.9) ? target.toFixed(1) : Math.floor(target);
-                        
+
                         // Add percentage or plus sign based on the target value
                         if (target === 40) {
                             stat.textContent += '+';
                         }
                     }
                 };
-                
+
                 updateCount();
             });
-            
+
             // Disconnect observer after animation
             observer.disconnect();
         }
@@ -235,31 +235,139 @@ const observer = new IntersectionObserver((entries) => {
 // Observe each stat number
 stats.forEach(stat => observer.observe(stat));
 
+
 // Contact Form Handling
 function initContactForm() {
     const form = document.getElementById('contactForm');
+    const formTitle = document.getElementById('contactFormTitle');
+    const successCard = document.getElementById('successCard');
+    const submittedName = document.getElementById('submittedName');
+    const btnSendAnother = document.getElementById('btnSendAnother');
+
     if (!form) return;
 
-    form.addEventListener('submit', (e) => {
+    const submitBtn = form.querySelector('.btn-submit');
+    const btnText = submitBtn ? submitBtn.querySelector('.btn-text') : null;
+
+    form.addEventListener('submit', async (e) => {
         e.preventDefault();
-        
-        const name = document.getElementById('name').value.trim();
-        const email = document.getElementById('email').value.trim();
-        const phone = document.getElementById('phone').value.trim();
-        const message = document.getElementById('message').value.trim();
+
+        const nameInput = document.getElementById('name');
+        const emailInput = document.getElementById('email');
+        const messageInput = document.getElementById('message');
+
+        const name = nameInput ? nameInput.value.trim() : '';
+        const email = emailInput ? emailInput.value.trim() : '';
+        const message = messageInput ? messageInput.value.trim() : '';
 
         if (!name || !email || !message) {
             alert('Please fill in all required fields.');
             return;
         }
 
-        const phoneNumber = '6285138532793';
-        const whatsappMessage = `Hello NaraLeaf,\n\nName: ${name}\nEmail: ${email}\nPhone: ${phone}\n\nMessage:\n${message}`;
-        const encodedMessage = encodeURIComponent(whatsappMessage);
-        const whatsappUrl = `https://wa.me/${phoneNumber}?text=${encodedMessage}`;
-        
-        window.open(whatsappUrl, '_blank');
+        // Set Loading State
+        if (submitBtn) {
+            submitBtn.classList.add('loading');
+            submitBtn.disabled = true;
+        }
+        if (btnText) {
+            btnText.textContent = "Sending...";
+        }
+
+        const formData = new FormData(form);
+
+        try {
+            const response = await fetch("https://api.web3forms.com/submit", {
+                method: "POST",
+                body: formData
+            });
+
+            const data = await response.json();
+
+            if (response.ok || data.success) {
+                // Set submitted name in success message
+                if (submittedName) {
+                    submittedName.textContent = name;
+                }
+
+                // Smoothly fade/collapse form and title
+                if (formTitle) {
+                    formTitle.classList.remove('fade-in');
+                    formTitle.classList.add('hide');
+                }
+                form.classList.remove('fade-in');
+                form.classList.add('hide');
+
+                setTimeout(() => {
+                    form.style.display = 'none';
+                    if (formTitle) formTitle.style.display = 'none';
+
+                    // Show success card
+                    if (successCard) {
+                        successCard.style.display = 'flex';
+                        successCard.classList.add('show');
+                        
+                        // Scroll to the contact section so success card is fully visible
+                        const contactSection = document.getElementById('contact-form');
+                        if (contactSection) {
+                            window.scrollTo({
+                                top: contactSection.offsetTop - 80,
+                                behavior: 'smooth'
+                            });
+                        }
+                    }
+                }, 450);
+
+                form.reset();
+            } else {
+                alert("Error: " + (data.message || "Failed to submit. Please try again."));
+                resetLoadingState();
+            }
+
+        } catch (error) {
+            alert("Something went wrong. Please check your network connection and try again.");
+            resetLoadingState();
+        }
     });
+
+    function resetLoadingState() {
+        if (submitBtn) {
+            submitBtn.classList.remove('loading');
+            submitBtn.disabled = false;
+        }
+        if (btnText) {
+            btnText.textContent = "Send Message";
+        }
+    }
+
+    if (btnSendAnother) {
+        btnSendAnother.addEventListener('click', () => {
+            if (successCard) {
+                successCard.classList.remove('show');
+                successCard.style.display = 'none';
+            }
+
+            // Bring back the form and form title with fade-in animation
+            if (formTitle) {
+                formTitle.style.display = 'block';
+                formTitle.classList.remove('hide');
+                formTitle.classList.add('fade-in');
+            }
+            if (form) {
+                form.style.display = 'flex';
+                form.classList.remove('hide');
+                form.classList.add('fade-in');
+            }
+            
+            // Focus on name input
+            const nameInput = document.getElementById('name');
+            if (nameInput) {
+                nameInput.focus();
+            }
+
+            resetLoadingState();
+        });
+    }
 }
 
 initContactForm();

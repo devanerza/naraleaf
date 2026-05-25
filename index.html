@@ -252,8 +252,9 @@
                 </div>
             </div>
             <div class="contact-form-right">
-                <h2 class="section-title">Send Us a Message</h2>
-                <form class="form" id="contactForm">
+                <h2 class="section-title" id="contactFormTitle">Send Us a Message</h2>
+                <form class="form" id="contactForm" action="https://api.web3forms.com/submit" method="POST">
+                    <input type="hidden" name="access_key" value="9a6d9899-dddc-4626-91cd-93a5c664b591">
                     <div class="form-group">
                         <label for="name">Name</label>
                         <input type="text" id="name" name="name" class="form-input" required>
@@ -266,8 +267,29 @@
                         <label for="message">Message</label>
                         <textarea id="message" name="message" class="form-input" rows="5" required></textarea>
                     </div>
-                    <button type="submit" class="btn btn-submit">Send Message</button>
+                    <button type="submit" class="btn btn-submit" id="btnSubmit">
+                        <span class="btn-text">Send Message</span>
+                        <span class="btn-spinner"></span>
+                    </button>
                 </form>
+
+                <div class="success-card" id="successCard">
+                    <div class="success-icon-wrap">
+                        <svg class="success-checkmark" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 52 52">
+                            <circle class="success-checkmark-circle" cx="26" cy="26" r="25" fill="none" />
+                            <path class="success-checkmark-check" fill="none" d="M14.1 27.2l7.1 7.2 16.7-16.8" />
+                        </svg>
+                        <div class="success-leaf-decor">
+                            <i class="fas fa-leaf floating-leaf leaf-1"></i>
+                            <i class="fas fa-leaf floating-leaf leaf-2"></i>
+                        </div>
+                    </div>
+                    <h3 class="success-title">Message Sent!</h3>
+                    <p class="success-message">Thank you, <strong id="submittedName"></strong>! Your inquiry about our
+                        premium banana leaves has been received. We will get back to you within 24 hours.</p>
+                    <button type="button" id="btnSendAnother" class="btn btn-submit btn-secondary">Send Another
+                        Message</button>
+                </div>
             </div>
         </div>
     </section>
@@ -276,17 +298,17 @@
         <div class="contact-info">
             <div class="contacts">
                 <h3 class="section-title">Contact Us</h3>
-                <p><i class="fa-solid fa-envelope"></i> info@naraleaf.com</p>
+                <p><i class="fa-solid fa-envelope"></i> bananaleaflumajang@naraleaf.com</p>
                 <p><i class="fa-solid fa-phone"></i> +62 851 3853 2793</p>
             </div>
             <div class="socials">
                 <h3 class="section-title">Follow Us</h3>
                 <a href="https://www.facebook.com/bananaleaflumajang" target="_blank"><i class="fab fa-facebook"></i>
                     @bananaleaflmjg</a>
-                <a href="https://www.instagram.com/bananaleaflumajang" target="_blank"><i class="fab fa-instagram"></i>
-                    @bananaleaflumajang</a>
-                <a href="https://twitter.com/bananaleaflumajang" target="_blank"><i class="fab fa-twitter"></i>
-                    @lumajangbananaleaf</a>
+                <a href="https://www.instagram.com/nara.leaf" target="_blank"><i class="fab fa-instagram"></i>
+                    @nara.leaf</a>
+                <a href="https://www.linkedin.com/company/naraleaf.com" target="_blank"><i class="fab fa-linkedin"></i>
+                    @naraleaf-com</a>
             </div>
             <div class="store">
                 <p>
