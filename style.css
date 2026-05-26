@@ -582,6 +582,7 @@ nav ul li a:hover {
 .product-image {
     height: 250px;
     overflow: hidden;
+    position: relative;
 }
 
 .product-image img {
@@ -593,6 +594,35 @@ nav ul li a:hover {
 
 .product-card:hover .product-image img {
     transform: scale(1.1);
+}
+
+.product-carousel .carousel-slide img {
+    border-radius: 0;
+    box-shadow: none;
+}
+
+.product-carousel .carousel-btn {
+    width: 30px;
+    height: 30px;
+    font-size: 0.9rem;
+}
+
+.product-carousel .prev-btn {
+    left: 8px;
+}
+
+.product-carousel .next-btn {
+    right: 8px;
+}
+
+.product-carousel .carousel-dots {
+    bottom: 8px;
+    gap: 6px;
+}
+
+.product-carousel .dot {
+    width: 8px;
+    height: 8px;
 }
 
 .product-info {
